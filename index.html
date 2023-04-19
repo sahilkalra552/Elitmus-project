@@ -157,7 +157,7 @@
             let localtoken = localStorage.getItem("authToken");
             // setIsLoading(true);
             async function fetcher() {
-                await fetch(`http://localhost:9669/user/level_update`, {
+                await fetch(`http://3.89.90.64:9669/user/level_update`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -192,7 +192,7 @@
     function hintrequest() {
         let localtoken = localStorage.getItem("authToken");
         async function fetcher() {
-            await fetch(`http://localhost:9669/user/hint_used`, {
+            await fetch(`http://3.89.90.64:9669/user/hint_used`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
