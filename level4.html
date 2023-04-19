@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Stock But And Sell</title>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <style>
+        #graph {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 600px;
+        }
+
+        .bar {
+            width: 90px;
+            background-color: black;
+            margin-bottom: 10px;
+            transition: height 0.5s ease-in-out;
+        }
+
+        .label {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 style="opacity: 0.07;">Stock Buy And Sell</h2>
+    <div class="container">
+        <button class="btn btn-secondary" onclick="signout()">Logout</button>
+        <h1 class="mt-5">
+            Level 4
+        </h1>
+        <div id="graph"></div>
+        <div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <input class="form-control w-25" type="text" name="solution1" id="solution1"
+                placeholder="enter solution here">
+            <br>
+            <button onclick="clicked()" class="btn btn-dark" id="sol1_submit">Submit</button>
+            <button onclick="hintrequest()" class="btn btn-light mt-4 text-light">HINT</button>
+        </div>
+    </div>
+    <script>
+        function drawBarGraph(values) {
+            const container = document.getElementById("graph");
+
+            for (const value of values) {
+                const barDiv = document.createElement("div");
+                barDiv.classList.add("bar");
+                barDiv.style.height = `${value}px`;
+                container.appendChild(barDiv);
+
+                const labelDiv = document.createElement("div");
+                labelDiv.classList.add("label");
+                labelDiv.textContent = value;
+                container.appendChild(labelDiv);
+            }
+        }
+        const values = [ 560, 150, 500, 350, 590, 630, 450, 240, 650, 410 ];
+        drawBarGraph(values);
+        function maxProfit(price, start, end) {
+            if (end <= start) {
+                return 0;
+            }
+            let profit = 0;
+            for (let i = start; i < end; i++) {
+                for (let j = i + 1; j <= end; j++) {
+                    if (price[ j ] > price[ i ]) {
+                        let curr_profit = price[ j ] - price[ i ]
+                            + maxProfit(price, start, i - 1)
+                            + maxProfit(price, j + 1, end);
+                        profit = Math.max(profit, curr_profit);
+                    }
+                }
+            }
+            return profit;
+        }
+        let solution = maxProfit(values, 0, values.length - 1);
+        console.log(solution);
+        function clicked() {
+            let entered = document.getElementById("solution1");
+            if (entered.value == solution) {
+                let localtoken = localStorage.getItem("authToken");
+                // setIsLoading(true);
+                async function fetcher() {
+                    await fetch(`http://localhost:9669/user/level_update`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                        },
+                        body: JSON.stringify({ new_level: 5, token: localtoken })
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+
+                            // setIsLoading(false);
+                            return data;
+                        });
+                }
+                const request_response = fetcher();
+                localStorage.setItem("curr_level", 5);
+                alert("Correct solution");
+                window.location.href = "level5.html";
+            } else {
+                alert("Wrong answer");
+            }
+        }
+        const signout = () => {
+            if (localStorage.getItem("authToken")) {
+                localStorage.removeItem("authToken");
+            }
+            if (localStorage.getItem("curr_level")) {
+                localStorage.removeItem("curr_level");
+            }
+            window.location.href = "login.html";
+        }
+        function hintrequest() {
+            let localtoken = localStorage.getItem("authToken");
+            // setIsLoading(true);
+            async function fetcher() {
+                await fetch(`http://localhost:9669/user/hint_used`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                    },
+                    body: JSON.stringify({ lvl: 4, lvl4_hint_used: true, token: localtoken })
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+
+                        // setIsLoading(false);
+                        return data;
+                    });
+            }
+            const request_response = fetcher();
+            alert("Hint : The max profit from buying and selling the stocks");
+        }
+    </script>
+</body>
+
+</html>
