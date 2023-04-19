@@ -30,7 +30,7 @@
     function playAgain() {
         let localtoken = localStorage.getItem("authToken");
         async function fetcher() {
-            await fetch(`https://3.89.90.64:9669/user/level_update`, {
+            await fetch(`http://3.89.90.64:9669/user/level_update`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -42,7 +42,7 @@
                 .then((data) => {
                     return data;
                 });
-            await fetch(`https://3.89.90.64:9669/user/reset`, {
+            await fetch(`http://3.89.90.64:9669/user/reset`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

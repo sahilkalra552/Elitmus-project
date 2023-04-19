@@ -67,7 +67,7 @@
             }
             let localtoken = localStorage.getItem("authToken");
             console.log(submitted_data);
-            const data = await fetch("https://3.89.90.64:9669/user/dashboard", {
+            const data = await fetch("http://3.89.90.64:9669/user/dashboard", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
